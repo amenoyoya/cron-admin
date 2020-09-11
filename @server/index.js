@@ -1,5 +1,6 @@
 const express = require('express')
 const cookieParser = require('cookie-parser')
+const cors = require('cors')
 const app = express()
 
 /**
@@ -15,15 +16,10 @@ app.use(express.urlencoded({ extended: true })); // 配列型のフォームデ�
 // ※ Express 4.X 以降 cookie-parser は標準搭載されていないため、別途インストール
 app.use(cookieParser())
 
-// Originセキュリティ
-app.use((req, res, next) => {
-  // 同一サーバからのリクエストのみ許可
-  // if (req.header('origin') !== process.env.APP_URI) {
-  //   return res.status(403).send() // 403 Forbidden
-  // }
-  console.log(req.ip)
-  next()
-})
+// CORSセキュリティ: nuxt app からのリクエストのみ許可
+app.use(cors({
+  origin: process.env.APP_URI
+}))
 
 // API base URI
 const basepath = ''
@@ -43,12 +39,12 @@ app.use(`${basepath}/util`, require('./api_util'))
  */
 app.use(`${basepath}/nuxt`, require('./api_nuxt'))
 
-module.exports = {
-  path: '/server',
-  handle: app,
-}
+// module.exports = {
+//   path: '/server',
+//   handle: app,
+// }
 
-// // listen: http://localhost:3333/
-// const port = process.env.SERVER_PORT || 3333
-// console.log(`Backend server\nListening on: http://localhost:${port}/`)
-// app.listen(port)
+// listen: http://localhost:3333/
+const port = process.env.SERVER_PORT || 3333
+console.log(`Backend server\nListening on: http://localhost:${port}/`)
+app.listen(port)

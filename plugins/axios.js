@@ -1,10 +1,9 @@
 import Vue from 'vue'
-import axios from 'axios'
 import rison from 'rison'
 import randtoken from 'rand-token'
+import axios from 'axios'
 
 Vue.prototype.$axios = axios
-Vue.prototype.$console = console
 
 /**
  * NeDB操作関連
@@ -133,12 +132,10 @@ const nedb = axios => {
   }
 }
 
-Vue.prototype.$nedb = nedb(axios)
-
 /**
  * ユーティリティAPI関連
  */
-const util = axios => {
+const util = (axios, cookies) => {
   return {
     /**
      * bcryptハッシュ化
@@ -197,27 +194,30 @@ const util = axios => {
     },
 
     /**
-     * サーバセッションにデータ保存＆クッキーにセッションID保存
-     * @param {string} key セッションID保存先クッキーのkey
+     * サーバセッションにデータ保存し、クッキーにセッションID保存
+     * @param {string} key セッションIDを保存するクッキーkey
      * @param {*} data セッションに保存するデータ
      * @param {number} lifetime = 1440 セッション＆クッキーの保存期限（秒）
-     * @return {boolean}
      */
     async saveSession(key, data, lifetime = 1440) {
-      const res = (await axios.post(`${process.env.SERVER_URI}/util/session/${key}/?lifetime=${lifetime}`, data)).data
+      const res = (await axios.post(`${process.env.SERVER_URI}/util/session/?lifetime=${lifetime}`, data)).data
       if (!res.result) {
         throw new Error(res.error)
       }
-      return res.result
+      cookies.set(key, res.result, {path: '/', maxAge: lifetime})
     },
 
     /**
      * サーバセッションからデータ取得
-     * @param {string} key セッションIDを保持しているクッキーのkey
+     * @param {string} key セッションIDを保持しているクッキーkey
      * @return {*} data
      */
     async loadSession(key) {
-      const res = (await axios.get(`${process.env.SERVER_URI}/util/session/${key}/`)).data
+      const sessionId = cookies.get(key, {path: '/'})
+      if (!sessionId) {
+        throw new Error('Cookie has no session id')
+      }
+      const res = (await axios.get(`${process.env.SERVER_URI}/util/session/${sessionId}/`)).data
       if (!res.result) {
         throw new Error(res.error)
       }
@@ -225,21 +225,22 @@ const util = axios => {
     },
 
     /**
-     * サーバセッションとセッションIDを保持しているクッキーを削除
-     * @param {string} key セッションIDを保持しているクッキーのkey
-     * @return {boolean}
+     * サーバセッションを削除
+     * @param {string} key セッションIDを保持しているクッキーkey
      */
     async clearSession(key) {
-      const res = (await axios.delete(`${process.env.SERVER_URI}/util/session/${key}/`)).data
+      const sessionId = cookies.get(key)
+      if (!sessionId) {
+        throw new Error('Cookie has no session id')
+      }
+      const res = (await axios.delete(`${process.env.SERVER_URI}/util/session/${sessionId}/`)).data
       if (!res.result) {
         throw new Error(res.error)
       }
-      return res.result
+      cookies.remove(key)
     },
   }
 }
-
-Vue.prototype.$util = util(axios)
 
 /**
  * Nuxt System API関連
@@ -261,13 +262,17 @@ const system = axios => {
   }
 }
 
-Vue.prototype.$system = system(axios)
-
 /**
  * asyncData で使えるように context.app へ export
+ * Vue インスタンス内で使えるように Vue.prototype へ export
  */
-export default ({app, $axios}) => {
+export default ({app, $axios, $cookies}) => {
   app.$nedb = nedb($axios)
-  app.$util = util($axios)
+  Vue.prototype.$nedb = nedb(axios)
+  
+  app.$util = util($axios, $cookies)
+  Vue.prototype.$util = util(axios, $cookies)
+
   app.$system = system($axios)
+  Vue.prototype.$system = system(axios)
 }

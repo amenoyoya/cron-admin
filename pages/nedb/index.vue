@@ -1,40 +1,37 @@
 <template>
-  <div class="container">
-    <h1 class="border-b-4 text-3xl font-bold">NeDB Express</h1>
-    <section class="mt-4">
-      <div class="bg-gray-300 flex flex-row justify-between p-2 items-center">
-        <h2 class="text-xl">Collections</h2>
-        <form class="flex flex-row ml-4" @submit.prevent="createCollection">
-          <input type="text" class="input" placeholder="Collection Name" v-model="collection">
-          <button type="submit" class="btn bg-blue-600 text-white">
-            <i class="fas fa-plus mr-2" />Create Collection
-          </button>
-        </form>
-      </div>
-      <ul class="table w-full mt-2">
-        <li v-for="(collection, index) in collections" :key="index" class="table-row h-20">
-            <div class="table-cell align-middle w-1/6 border px-1">
-              <nuxt-link :to="{name: 'nedb-collection', params: {collection}}" class="btn w-full bg-green-600 text-white">
-                <i class="fas fa-eye" /><br />View
-              </nuxt-link>
-            </div>
-            <div class="table-cell align-middle w-2/3 text-2xl border px-2">
-              <nuxt-link :to="{name: 'nedb-collection', params: {collection}}" class="link">{{ collection }}</nuxt-link>
-            </div>
-            <div class="table-cell align-middle w-1/6 border px-1">
-              <button class="btn w-full bg-red-600 text-white" @click.prevent="deleteCollection(collection)">
-                <i class="fas fa-trash" /><br />Delete
-              </button>
-            </div>
-        </li>
-      </ul>
-    </section>
-  </div>
+  <section class="mt-4">
+    <div class="bg-gray-300 flex flex-row justify-between p-2 items-center">
+      <h2 class="text-xl">Collections</h2>
+      <form class="flex flex-row ml-4" @submit.prevent="createCollection">
+        <input type="text" class="input" placeholder="Collection Name" v-model="collection">
+        <button type="submit" class="btn bg-blue-600 text-white">
+          <i class="fas fa-plus mr-2" />Create Collection
+        </button>
+      </form>
+    </div>
+    <ul class="table w-full mt-2">
+      <li v-for="(collection, index) in collections" :key="index" class="table-row h-20">
+          <div class="table-cell align-middle w-1/6 border px-1">
+            <nuxt-link :to="{name: 'nedb-collection', params: {collection}}" class="btn w-full bg-green-600 text-white">
+              <i class="fas fa-eye" /><br />View
+            </nuxt-link>
+          </div>
+          <div class="table-cell align-middle w-2/3 text-2xl border px-2">
+            <nuxt-link :to="{name: 'nedb-collection', params: {collection}}" class="link">{{ collection }}</nuxt-link>
+          </div>
+          <div class="table-cell align-middle w-1/6 border px-1">
+            <button class="btn w-full bg-red-600 text-white" @click.prevent="deleteCollection(collection)">
+              <i class="fas fa-trash" /><br />Delete
+            </button>
+          </div>
+      </li>
+    </ul>
+  </section>
 </template>
 
 <script>
 export default {
-  middleware: 'nedb_auth',
+  layout: 'nedb',
   
   data() {
     return {

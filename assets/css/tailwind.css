@@ -3,7 +3,7 @@
 @import 'tailwindcss/utilities';
 
 .container {
-  @apply flex flex-col mx-auto mt-4;
+  @apply flex flex-col justify-center items-center mx-auto mt-4 px-4;
 }
 
 .btn {

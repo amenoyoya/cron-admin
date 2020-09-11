@@ -1,69 +1,66 @@
 <template>
-  <div class="container">
-    <h1 class="border-b-4 text-3xl font-bold">NeDB Express</h1>
-    <section class="mt-4">
-      <div class="bg-gray-300 flex flex-row justify-between p-2 items-center">
-        <ul class="breadcrumb">
-          <li><a href="/nedb/" class="link">Collections</a></li>
-          <li>{{ collection }}</li>
-        </ul>
-      </div>
-      <ul class="flex justify-center p-2 items-center">
-        <li>
-          <a :class="'btn ' + (docs.page <= 1? 'disabled': '')"
-            :href="docs.page <= 1? null: `/nedb/${collection}/?page=1`"
-          >
-            <i class="fas fa-angle-double-left" />
-          </a>
-        </li>
-        <li v-for='page in pages' :key="page">
-          <a :class="'btn ' + (docs.page == page + 1? 'disabled': '')"
-            :href="docs.page == page + 1? null: `/nedb/${collection}/?page=${page + 1}`"
-          >
-            {{ page + 1 }}
-          </a>
-        </li>
-        <li>
-          <a :class="'btn ' + (docs.page >= docs.last? 'disabled': '')"
-            :href="docs.page >= docs.last? null: `/nedb/${collection}/?page=${docs.last}`"
-          >
-            <i class="fas fa-angle-double-right" />
-          </a>
-        </li>
+  <section class="mt-4">
+    <div class="bg-gray-300 flex flex-row justify-between p-2 items-center">
+      <ul class="breadcrumb">
+        <li><a href="/nedb/" class="link">Collections</a></li>
+        <li>{{ collection }}</li>
       </ul>
-      <div class="flex justify-center items-center">
-        {{ docs.start }} - {{ docs.end }} / {{ docs.count }}
-      </div>
-      <a class="btn bg-green-600 text-white" :href="`/nedb/${collection}/edit/`">
-        <i class="fas fa-sticky-note mr-2" />New
-      </a>
-      <table class="min-w-full mt-4">
-        <thead class="shadow-md">
-          <tr v-if="columns.length">
-            <th class="border">Edit</th>
-            <th class="border" v-for="(column, index) in columns" :key="index">
-              {{ column }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(row, x) in docs.data" :key="x">
-            <td class="border p-2 flex justify-evenly">
-              <a class="btn bg-orange-400 text-white" :href="`/nedb/${collection}/edit/?id=${row._id}`">
-                <i class="fas fa-edit mr-2" />Edit
-              </a>
-              <button class="btn bg-red-600 text-white" @click.prevent="deleteDocument(row._id)">
-                <i class="fas fa-trash mr-2" />Delete
-              </button>
-            </td>
-            <td class="border p-2" v-for="(column, y) in columns" :key="y">
-              {{ row[column] }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
-  </div>
+    </div>
+    <ul class="flex justify-center p-2 items-center">
+      <li>
+        <a :class="'btn ' + (docs.page <= 1? 'disabled': '')"
+          :href="docs.page <= 1? null: `/nedb/${collection}/?page=1`"
+        >
+          <i class="fas fa-angle-double-left" />
+        </a>
+      </li>
+      <li v-for='page in pages' :key="page">
+        <a :class="'btn ' + (docs.page == page + 1? 'disabled': '')"
+          :href="docs.page == page + 1? null: `/nedb/${collection}/?page=${page + 1}`"
+        >
+          {{ page + 1 }}
+        </a>
+      </li>
+      <li>
+        <a :class="'btn ' + (docs.page >= docs.last? 'disabled': '')"
+          :href="docs.page >= docs.last? null: `/nedb/${collection}/?page=${docs.last}`"
+        >
+          <i class="fas fa-angle-double-right" />
+        </a>
+      </li>
+    </ul>
+    <div class="flex justify-center items-center">
+      {{ docs.start }} - {{ docs.end }} / {{ docs.count }}
+    </div>
+    <a class="btn bg-green-600 text-white" :href="`/nedb/${collection}/edit/`">
+      <i class="fas fa-sticky-note mr-2" />New
+    </a>
+    <table class="min-w-full mt-4">
+      <thead class="shadow-md">
+        <tr v-if="columns.length">
+          <th class="border">Edit</th>
+          <th class="border" v-for="(column, index) in columns" :key="index">
+            {{ column }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(row, x) in docs.data" :key="x">
+          <td class="border p-2 flex justify-evenly">
+            <a class="btn bg-orange-400 text-white" :href="`/nedb/${collection}/edit/?id=${row._id}`">
+              <i class="fas fa-edit mr-2" />Edit
+            </a>
+            <button class="btn bg-red-600 text-white" @click.prevent="deleteDocument(row._id)">
+              <i class="fas fa-trash mr-2" />Delete
+            </button>
+          </td>
+          <td class="border p-2" v-for="(column, y) in columns" :key="y">
+            {{ row[column] }}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
 </template>
 
 <script>
@@ -99,7 +96,7 @@ const initialize = async (nedb, collection, page) => {
 }
 
 export default {
-  middleware: 'nedb_auth',
+  layout: 'nedb',
   
   data() {
     return {

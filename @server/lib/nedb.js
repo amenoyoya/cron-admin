@@ -1,5 +1,6 @@
 const nedb = require('nedb-promises')
 const fs = require('fs')
+const databases = {}
 
 /**
  * ファイル存在判定
@@ -37,10 +38,9 @@ module.exports = (name, mode = 'open') => {
     }
   }
   // コレクション作成
-  const db = nedb.create({
-    filename: `./nedb/${name}.db`,
-    autoload: true,
-  })
+  const filename = `./nedb/${name}.db`
+  const db = databases[filename] || new nedb({filename, autoload: true})
+  databases[filename] = db
   // cursor 共通メソッド: sort, limit, skip
   const sort_limit_skip = (cursor, condition) => {
     if (typeof condition === 'object' && typeof condition['$sort'] === 'object') {

@@ -21,7 +21,7 @@ export default {
   ** See https://nuxtjs.org/api/configuration-target
   */
   target: 'server',
-  serverMiddleware: ['~/@server/index.js'],
+  serverMiddleware: [],
   server: {
     port: process.env.APP_PORT || 3000,
     // host: '0.0.0.0',
@@ -85,6 +85,7 @@ export default {
     '@nuxtjs/axios',
     '@nuxtjs/toast',
     '@nuxtjs/proxy',
+    ['cookie-universal-nuxt', { parseJSON: false }],
   ],
   /*
   ** Build configuration
