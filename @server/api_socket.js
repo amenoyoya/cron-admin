@@ -8,14 +8,14 @@ dayjs.locale('ja')
 
 /**
  * NeDB.@crons.schedule を cron-parser で解析し、NeDB.@jobs にジョブを追加する
- * @schedule every minutes
+ * @schedule every 30 seconds
  * @note NeDB.@crons: {
  *   _id: string,
  *   schedule: string, // cron書式の定期実行スケジュール
  *   ... // その他ジョブとして登録したい情報
  * }
  */
-schedule.scheduleJob('* * * * *', async () => {
+schedule.scheduleJob('*/30 * * * * *', async () => {
   const jobs = nedb('@jobs')
   for (const cron of await nedb('@crons').find()) {
     try {
