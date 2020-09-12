@@ -1,11 +1,11 @@
 <template>
   <section class="flex flex-col justify-center items-center">
-    <h2 class="text-2xl mb-8">タスク編集</h2>
+    <h2 class="text-2xl mb-8">リマインダー編集</h2>
     <ValidationObserver
       ref="vobs" tag="form" class="w-full mx-auto"
       @submit.prevent="submit" v-slot="{invalid}"
     >
-      <dl class="flex flex-grow w-full my-2">
+      <dl class="flex flex-grow items-baseline w-full my-2">
         <dt class="w-1/6">
           <label for="title" class="mr-4">Title</label>
         </dt>
@@ -16,13 +16,24 @@
           </ValidationProvider>
         </dd>
       </dl>
-      <dl class="flex flex-grow w-full my-2">
+      <dl class="flex flex-grow items-baseline w-full my-2">
         <dt class="w-1/6">
-          <label for="cron" class="mr-4">Cron</label>
+          <label for="everyMode" class="mr-4">EveryMode</label>
+        </dt>
+        <dd>
+          <Toggle id="everyMode" name="every" v-model="everyMode" />
+        </dd>
+      </dl>
+      <dl class="flex flex-grow items-baseline w-full my-2">
+        <dt class="w-1/6">
+          <label for="schedule" class="mr-4">Schedule</label>
         </dt>
         <dd class="flex-1">
-          <ValidationProvider rules="required" v-slot="{errors}">
-            <input type="text" class="input w-full" id="cron" name="cron" v-model="cron" />
+          <ValidationProvider rules="required" v-slot="{errors}" name="schedule">
+            <VueCtkDateTimePicker
+              id="schedule" :no-label="true" :no-header="true"
+              format="YYYY-MM-DD HH:mm" formatted="YYYY-MM-DD HH:mm" v-model="schedule"
+            />
             <Error v-show="errors">{{ errors[0] }}</Error>
           </ValidationProvider>
         </dd>
@@ -52,16 +63,17 @@ export default {
   data() {
     return {
       title: '',
-      cron: '',
+      everyMode: '',
+      schedule: '',
       content: '',
     }
   },
   methods: {
     async submit() {
       try {
-        await this.$nedb.insert('tasks', {
+        await this.$nedb.insert('reminds', {
           title: this.title,
-          cron: this.cron,
+          schedule: this.schedule,
           content: this.content,
         })
         this.$toast.success(`${this.title} posted`, {duration: 3000})

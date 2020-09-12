@@ -86,6 +86,7 @@ export default {
     '@nuxtjs/toast',
     '@nuxtjs/proxy',
     ['cookie-universal-nuxt', { parseJSON: false }],
+    'vue-ctk-date-time-picker/nuxt',
   ],
   /*
   ** Build configuration
