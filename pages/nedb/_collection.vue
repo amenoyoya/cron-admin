@@ -35,7 +35,7 @@
     <a class="btn bg-green-600 text-white" :href="`/nedb/${collection}/edit/`">
       <i class="fas fa-sticky-note mr-2" />New
     </a>
-    <table class="min-w-full mt-4">
+    <table class="table-auto w-full mt-4">
       <thead class="shadow-md">
         <tr v-if="columns.length">
           <th class="border">Edit</th>
@@ -46,13 +46,15 @@
       </thead>
       <tbody>
         <tr v-for="(row, x) in docs.data" :key="x">
-          <td class="border p-2 flex justify-evenly">
-            <a class="btn bg-orange-400 text-white" :href="`/nedb/${collection}/edit/?id=${row._id}`">
-              <i class="fas fa-edit mr-2" />Edit
-            </a>
-            <button class="btn bg-red-600 text-white" @click.prevent="deleteDocument(row._id)">
-              <i class="fas fa-trash mr-2" />Delete
-            </button>
+          <td class="border">
+            <div class="flex justify-evenly p-2">
+              <a class="btn bg-orange-400 text-white mr-2" :href="`/nedb/${collection}/edit/?id=${row._id}`">
+                <i class="fas fa-edit mr-2" />Edit
+              </a>
+              <button class="btn bg-red-600 text-white" @click.prevent="deleteDocument(row._id)">
+                <i class="fas fa-trash mr-2" />Delete
+              </button>
+            </div>
           </td>
           <td class="border p-2" v-for="(column, y) in columns" :key="y">
             {{ row[column] }}

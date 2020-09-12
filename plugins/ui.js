@@ -34,6 +34,14 @@ Vue.component('AceEditor', AceEditor)
 
 
 /**
+ * Vue.js Quill Wysiwyg Editor
+ */
+import {VueEditor} from 'vue2-editor'
+
+Vue.component('Quill', VueEditor)
+
+
+/**
  * Vue.js sidebar menu
  * <sidebar-menu :menu="[{header, title, hiddenOnCollapse, icon, child}, ...]" />
  */

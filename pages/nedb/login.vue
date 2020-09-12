@@ -3,9 +3,9 @@
     <div class="bg-gray-300 flex flex-row justify-between p-2 items-center">
       <h2 class="text-xl">Login</h2>
     </div>
-    <div class="table w-full mt-2">
+    <div class="table w-full mt-4">
       <ValidationObserver
-        ref="vobs" tag="form" class="md:w-3/4 sm:w-full mx-auto"
+        ref="vobs" tag="form" class="w-full mx-auto"
         @submit.prevent="login" v-slot="{invalid}"
       >
         <InputWithLabel
@@ -56,7 +56,7 @@ export default {
           this.$toast.error('ログインに失敗しました', {duration: 3000})
         }
       } catch (err) {
-        console.log(err)
+        this.$toast.error(err.toString(), {duration: 3000})
       }
     },
   }

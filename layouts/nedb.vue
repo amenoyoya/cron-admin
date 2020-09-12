@@ -21,7 +21,7 @@ export default {
       if (admin.id !== process.env.NEDB_ADMIN_ID) {
         throw new Error('NeDB Admin ID not matched')
       }
-      store.commit('nedb_login', admin) // $store.state.nedb_admin に会員情報保持
+      store.commit('nedb_login', admin) // $store.state.nedb_admin に管理者情報保持
       if (route.path.match(/^\/nedb\/login\/?/)) {
         // ログイン中で /nedb/login/ にアクセスした際は /nedb/ にリダイレクト
         redirect('/nedb/')
