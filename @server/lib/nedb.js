@@ -1,5 +1,7 @@
 const nedb = require('nedb-promises')
 const fs = require('fs')
+const omit = require('./omit')
+
 const databases = {}
 
 /**
@@ -63,7 +65,7 @@ module.exports = (name, mode = 'open') => {
      */
     async find(condition) {
       // $sort, $limit, $skip キーを除く検索条件
-      const {$sort: {} = {}, $limit: {} = {}, $skip: {} = {}, ...query} = condition
+      const query = omit(condition, ['$sort', '$limit', '$skip'])
       return await sort_limit_skip(db.find(query), condition).exec()
     },
 
@@ -74,7 +76,7 @@ module.exports = (name, mode = 'open') => {
      */
     async count(condition) {
       // $sort, $limit, $skip キーを除く検索条件
-      const {$sort: {} = {}, $limit: {} = {}, $skip: {} = {}, ...query} = condition
+      const query = omit(condition, ['$sort', '$limit', '$skip'])
       return await sort_limit_skip(db.count(query), condition).exec()
     },
 
@@ -89,11 +91,7 @@ module.exports = (name, mode = 'open') => {
       page = page < 1? 1: page
       
       // $sort, $limit, $skip, $page, $per キーを除く検索条件
-      const {
-        $sort: {} = {}, $limit: {} = {}, $skip: {} = {},
-        $page: {} = {}, $per: {} = {},
-        ...query
-      } = condition
+      const query = omit(condition, ['$sort', '$limit', '$skip', '$page', '$per'])
       const count = await db.count(query).exec()
       const last = Math.ceil(count / perPage)
       

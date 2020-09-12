@@ -1,7 +1,11 @@
 const express = require('express')
+const app = express()
+
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
+
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
-const app = express()
 
 /**
  * process.env form .env
@@ -48,12 +52,22 @@ app.use(`${basepath}/util`, require('./api_util'))
  */
 app.use(`${basepath}/nuxt`, require('./api_nuxt'))
 
+/**
+ * socket.io listening: ws://localhost:3333/
+ */
+const port = process.env.SERVER_PORT || 3333
+
+io.on('connection', socket => {
+  console.log(`WebSocket client connected`)
+  require('./api_socket')(io, socket)
+})
+
+// listen: http://localhost:3333/
+http.listen(port, () => {
+  console.log(`Backend server\nListening on: http://localhost:${port}/`)
+})
+
 // module.exports = {
 //   path: '/server',
 //   handle: app,
 // }
-
-// listen: http://localhost:3333/
-const port = process.env.SERVER_PORT || 3333
-console.log(`Backend server\nListening on: http://localhost:${port}/`)
-app.listen(port)
