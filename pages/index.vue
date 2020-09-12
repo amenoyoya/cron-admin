@@ -3,7 +3,8 @@
     <div class="flex justify-between w-full">
       <a class="btn bg-green-600 text-white" href="/task/edit/">タスク追加</a>
     </div>
-    <table class="table-auto w-full mt-4">
+    <PaginationList :pager="pager" />
+    <table class="table-auto w-full my-4">
       <thead class="shadow-md">
         <tr>
           <th class="border">通知</th>
@@ -12,12 +13,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(note, index) in notifications" :key="index">
+        <tr v-for="(job, index) in pager.data" :key="index">
           <td class="border p-2 text-center w-1/5">
-            <datetime>{{ $dayjs(note.notificate).format('YYYY-MM-DD HH:mm:ss') }}</datetime>
+            <datetime>{{ $dayjs(job.schedule).format('YYYY-MM-DD HH:mm:ss') }}</datetime>
           </td>
           <td class="border p-2">
-            <a class="link" :href="`/task/${note._id}/`">{{ note.title }}</a>
+            <a class="link" :href="`/task/${job._id}/`">{{ job.title }}</a>
           </td>
           <td class="border p-2 w-1/5">
             <div class="flex justify-evenly p-2">
@@ -35,7 +36,7 @@
 export default {
   async asyncData({app}) {
     return {
-      notifications: await app.$nedb.find('tasks', {notificate: {$ne: ''}})
+      pager: await app.$nedb.paginate('@end_jobs')
     }
   },
   methods: {

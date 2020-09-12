@@ -6,32 +6,7 @@
         <li>{{ collection }}</li>
       </ul>
     </div>
-    <ul class="flex justify-center p-2 items-center">
-      <li>
-        <a :class="'btn ' + (docs.page <= 1? 'disabled': '')"
-          :href="docs.page <= 1? null: `/nedb/${collection}/?page=1`"
-        >
-          <i class="fas fa-angle-double-left" />
-        </a>
-      </li>
-      <li v-for='page in pages' :key="page">
-        <a :class="'btn ' + (docs.page == page + 1? 'disabled': '')"
-          :href="docs.page == page + 1? null: `/nedb/${collection}/?page=${page + 1}`"
-        >
-          {{ page + 1 }}
-        </a>
-      </li>
-      <li>
-        <a :class="'btn ' + (docs.page >= docs.last? 'disabled': '')"
-          :href="docs.page >= docs.last? null: `/nedb/${collection}/?page=${docs.last}`"
-        >
-          <i class="fas fa-angle-double-right" />
-        </a>
-      </li>
-    </ul>
-    <div class="flex justify-center items-center">
-      {{ docs.start }} - {{ docs.end }} / {{ docs.count }}
-    </div>
+    <PaginationList :pager="docs" />
     <a class="btn bg-green-600 text-white" :href="`/nedb/${collection}/edit/`">
       <i class="fas fa-sticky-note mr-2" />New
     </a>
@@ -87,13 +62,8 @@ const initialize = async (nedb, collection, page) => {
       }
     }
   }
-  // ページネーションリスト生成
-  const pages = [...Array(docs.last).keys()].slice(
-    (docs.page - 1) - 2 < 0? 0: (docs.page - 1) - 2,
-    docs.page + 2 > docs.last? docs.last: docs.page + 2
-  )
   return {
-    docs, columns, pages
+    docs, columns
   }
 }
 
@@ -128,7 +98,6 @@ export default {
           const data = await initialize(vue.$nedb, vue.collection, vue.$route.query.page)
           this.docs = data.docs
           this.columns = data.columns
-          this.pages = data.pages
           vue.$toast.success(`${vue.collection}/${document_id} を削除しました`, {duration: 3000})
         } catch(err) {
           vue.$toast.error(err.toString(), {duration: 3000})

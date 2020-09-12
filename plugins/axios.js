@@ -79,7 +79,7 @@ const nedb = axios => {
      *    data: [{*}]
      * }}
      */
-    async paginate(collection, condition) {
+    async paginate(collection, condition = {}) {
       const res = (await axios.get(`${process.env.SERVER_URI}/nedb/${collection}/?pager=${rison.encode(condition)}`)).data
       if (!res.result) {
         throw new Error(res.error)

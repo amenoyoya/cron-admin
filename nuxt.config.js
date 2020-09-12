@@ -64,7 +64,6 @@ export default {
   plugins: [
     {src: '~/plugins/dayjs'},
     {src: '~/plugins/axios.js'},
-    {src: '~/plugins/socket.js'},
     {src: '~/plugins/vee-validate.js'},
     {src: '~/plugins/ui.js', mode: 'client'},
   ],
