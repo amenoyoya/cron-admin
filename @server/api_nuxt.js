@@ -20,9 +20,9 @@ router.get('/routes/:name', (req, res) => {
         path: `${route.chunkName}.vue`,
         content: fs.readFileSync(route.component).toString()
       }
-    }).send()
+    })
   } catch(err) {
-    return res.json({result: false, error: err.toString()}).send()
+    return res.json({result: false, error: err.toString()})
   }
 })
 

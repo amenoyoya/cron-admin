@@ -81,9 +81,9 @@ router.post('/mail', async (req, res) => {
   try {
     const transporter = mailer.createTransport(req.body.transport || {})
     const info = await transporter.sendMail(req.body.config || {})
-    return res.json({result: info.messageId}).send()
+    return res.json({result: info.messageId})
   } catch(err) {
-    return res.json({result: false, error: err.toString()}).send()
+    return res.json({result: false, error: err.toString()})
   }
 })
 
@@ -104,9 +104,9 @@ router.post('/session', async (req, res) => {
       expires: dayjs().add(req.query.lifetime || 1440, 'second').format(),
     })
     // DBデータID（セッションID）を返す
-    return res.json({result: doc._id}).send()
+    return res.json({result: doc._id})
   } catch(err) {
-    return res.json({result: false, error: err.toString()}).send()
+    return res.json({result: false, error: err.toString()})
   }
 })
 
@@ -133,9 +133,9 @@ router.get('/session/:id', async (req, res) => {
     return res.json({
       // セッションデータを復号 => JSON化して返す
       result: JSON.parse(decrypt(doc.data, `@session.encrypt`))
-    }).send()
+    })
   } catch(err) {
-    return res.json({result: false, error: err.toString()}).send()
+    return res.json({result: false, error: err.toString()})
   }
 })
 
@@ -150,9 +150,9 @@ router.delete('/session/:id', async (req, res) => {
   try {
     // @session._id = セッションID のデータ削除
     await nedb('@session').remove({_id: req.params.id})
-    return res.json({result: true}).send()
+    return res.json({result: true})
   } catch(err) {
-    return res.json({result: false, error: err.toString()}).send()
+    return res.json({result: false, error: err.toString()})
   }
 })
 

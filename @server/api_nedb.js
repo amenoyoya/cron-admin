@@ -16,9 +16,9 @@ router.get('/', async (req, res) => {
     for (const file of await globby('./nedb/*.db')) {
       collections.push(path.basename(file, path.extname(file)))
     }
-    return res.json({result: collections}).send()
+    return res.json({result: collections})
   } catch(err) {
-    return res.json({result: false, error: err.toString()}).send()
+    return res.json({result: false, error: err.toString()})
   }
 })
 
@@ -33,17 +33,17 @@ router.post('/', async (req, res) => {
     return res.json({
       result: false,
       error: 'query parameter "collection" required',
-    }).send()
+    })
   }
   try {
     return res.json({
       result: typeof nedb(req.query.collection) === 'object'
-    }).send()
+    })
   } catch (err) {
     return res.json({
       result: false,
       error: err.toString(),
-    }).send()
+    })
   }
 })
 
@@ -58,15 +58,15 @@ router.delete('/', async (req, res) => {
     return res.json({
       result: false,
       error: 'query parameter "collection" required',
-    }).send()
+    })
   }
   try {
-    return res.json(nedb(req.query.collection, 'delete')).send()
+    return res.json(nedb(req.query.collection, 'delete'))
   } catch (err) {
     return res.json({
       result: false,
       error: err.toString(),
-    }).send()
+    })
   }
 })
 
@@ -94,9 +94,9 @@ router.get('/:collection', async (req, res) => {
       const query = rison.decode(req.query.query)
       return res.json({
         result: await nedb(req.params.collection).find(query)
-      }).send()
+      })
     } catch(err) {
-      return res.json({result: false, error: err.toString()}).send()
+      return res.json({result: false, error: err.toString()})
     }
   }
   if (req.query.pager) {
@@ -105,18 +105,18 @@ router.get('/:collection', async (req, res) => {
       const query = rison.decode(req.query.pager)
       return res.json({
         result: await nedb(req.params.collection).paginate(query, query['$page'] || 1, query['$per'] || 50)
-      }).send()
+      })
     } catch(err) {
-      return res.json({result: false, error: err.toString()}).send()
+      return res.json({result: false, error: err.toString()})
     }
   }
   // 通常検索(limit: 50件)
   try {
     return res.json({
       result: await nedb(req.params.collection).find({$limit: 50})
-    }).send()
+    })
   } catch(err) {
-    return res.json({result: false, error: err.toString()}).send()
+    return res.json({result: false, error: err.toString()})
   }
 })
 
@@ -130,9 +130,9 @@ router.post('/:collection/', async (req, res) => {
   try {
     return res.json({
       result: await nedb(req.params.collection).insert(req.body)
-    }).send()
+    })
   } catch(err) {
-    return res.json({result: false, error: err.toString()}).send()
+    return res.json({result: false, error: err.toString()})
   }
 })
 
@@ -149,15 +149,15 @@ router.put('/:collection/', async (req, res) => {
     try {
       query = rison.decode(req.query.query)
     } catch(err) {
-      return res.json({result: false, error: err.toString()}).send()
+      return res.json({result: false, error: err.toString()})
     }
   }
   try {
     return res.json({
       result: await nedb(req.params.collection).update(query, req.body)
-    }).send()
+    })
   } catch(err) {
-    return res.json({result: false, error: err.toString()}).send()
+    return res.json({result: false, error: err.toString()})
   }
 })
 
@@ -173,15 +173,15 @@ router.delete('/:collection', async (req, res) => {
     try {
       query = rison.decode(req.query.query)
     } catch(err) {
-      return res.json({result: false, error: err.toString()}).send()
+      return res.json({result: false, error: err.toString()})
     }
   }
   try {
     return res.json({
       result: await nedb(req.params.collection).remove(query)
-    }).send()
+    })
   } catch(err) {
-    return res.json({result: false, error: err.toString()}).send()
+    return res.json({result: false, error: err.toString()})
   }
 })
 
