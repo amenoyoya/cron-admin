@@ -15,7 +15,7 @@
       <tbody>
         <tr v-for="(job, index) in pager.data" :key="index">
           <td class="border p-2 text-center w-1/5">
-            <datetime>{{ $dayjs(job.schedule).format('YYYY-MM-DD HH:mm:ss') }}</datetime>
+            {{ $dayjs(job.schedule).format('YYYY-MM-DD HH:mm:ss') }}
           </td>
           <td class="border p-2">
             <a class="link" :href="`/task/${job._id}/`">{{ job.title }}</a>
@@ -33,20 +33,24 @@
 </template>
 
 <script>
+import client from 'socket.io-client'
+
 export default {
-  async asyncData({app}) {
+  async asyncData({app, route}) {
     return {
-      pager: await app.$nedb.paginate('@end_jobs')
+      pager: await app.$nedb.paginate('@end_jobs', {$sort: {schedule: -1}, $page: route.query.page || 1}),
     }
   },
-  methods: {
-    notify() {
-      // 通知の許可が得られていれば通知実行
-      if (Notification.permission === "granted") {
-        const notification = new Notification("こんにちは！")
-        console.log(notification)
-      }
-    }
-  }
+  mounted() {
+    // const socket = client.connect(process.env.SERVER_URI) // WebSocket接続
+    // // 定期実行イベント処理
+    // socket.on('cron', data => {
+    //   // 通知の許可が得られていれば通知実行
+    //   if (Notification.permission === 'granted') {
+    //     const notification = new Notification(data.title)
+    //     console.log(data)
+    //   }
+    // })
+  },
 }
 </script>

@@ -98,7 +98,7 @@ module.exports = (name, mode = 'open') => {
       page = page > last? last: page
       
       const start = count > 0? (page - 1) * perPage: 0
-      const find = db.find(query).limit(perPage).skip(start)
+      let find = db.find(query).limit(perPage).skip(start)
       if (typeof condition['$sort'] === 'object') {
         find = find.sort(condition['$sort'])
       }
